@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+
+interface IUnit
+{
+    void Attack();
+}
+
+class Soldier : IUnit
+{
+    public void Attack()
+    {
+        Console.WriteLine("Soldier attacking!");
+    }
+}
+
+class Tank : IUnit
+{
+    public void Attack()
+    {
+        Console.WriteLine("Tank attacking!");
+    }
+}
+abstract class MilitaryUnit
+{
+    public abstract IUnit CreateUnit();
+}
+
+class SoldierFactory : MilitaryUnit
+{
+    public override IUnit CreateUnit()
+    {
+        return new Soldier();
+    }
+}
+
+class TankFactory : MilitaryUnit
+{
+    public override IUnit CreateUnit()
+    {
+        return new Tank();
+    }
+}
+class Army
+{
+    private List<IUnit> units = new List<IUnit>();
+
+    public void AddUnit(MilitaryUnit factory)
+    {
+        IUnit unit = factory.CreateUnit();
+        units.Add(unit);
+    }
+
+    public void ExecuteAttack()
+    {
+        foreach (var unit in units)
+        {
+            unit.Attack();
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        MilitaryUnit soldierFactory = new SoldierFactory();
+        MilitaryUnit tankFactory = new TankFactory();
+        Army army = new Army();
+        army.AddUnit(soldierFactory);
+        army.AddUnit(tankFactory);
+        army.ExecuteAttack();
+        Console.ReadKey();
+    }
+}
